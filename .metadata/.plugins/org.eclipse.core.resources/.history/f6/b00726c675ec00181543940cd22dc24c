@@ -1,0 +1,158 @@
+package challenge;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+
+/**
+* This class StringManipulator reads data from Challenge_tests.CSV files      
+*  and writes the manipulated strings (Sort, hasUniqueChars, Clean) to Challenge_sorted.CSV 
+* 
+*/
+public class StringManipulator {
+
+		public static  void main(String[] args) {
+
+		StringManipulator stringManipulator = new StringManipulator();
+      
+		String csvFile = "src/dataSource/challenge_tests.csv";
+        BufferedReader reader = null;
+        String line = "";
+        
+        //list to store the words of file
+        List<String> data = new ArrayList<String>();
+        
+        try {
+
+            reader = new BufferedReader(new FileReader(csvFile));
+            
+            //this skips the first header line  
+            reader.readLine();
+            
+            while ((line = reader.readLine()) != null) {
+               if(!line.trim().isEmpty())
+                    data.add(line);
+            }
+	
+        } catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			// Close buffer reader
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		// Sort words if list is not empty
+		if (!data.isEmpty()) {
+			String[] arr = new String[data.size()];
+			stringManipulator.sortStrings(data.toArray(arr));
+		}
+	}
+	
+	/**
+	 * Removes all non-alphabetic characters from a string and converts all
+	 * characters to upper case.
+	 * 
+	 * @param str
+	 *            - String to clean
+	 * @return Cleaned string in upper case.
+	 * 
+	 * */
+	public String cleanString(String str) {
+		
+		if(str == null || str.isEmpty())
+			return str;
+			
+			//This REGEX replaces all non alphabetic char to "" and converts string to UpperCase
+			str = str.replaceAll("[^a-zA-Z]", "");
+			str = str.toUpperCase();
+		
+		return str;
+	}
+	
+	
+	public boolean hasUniqueChars(String word) {
+		
+		if (null == word || word.trim().isEmpty())
+			return false;
+		
+		word =  cleanString(word);
+		
+		for (int i = 0; i < word.length(); i++) 
+            for (int j = i + 1; j < word.length(); j++) 
+                if (word.charAt(i) == word.charAt(j)) 
+                    return false; 
+  
+        // If no duplicate characters encountered, 
+        // return true 
+        return true; 
+	}
+	
+	
+	public void getWeight(String word) {
+		
+		
+		
+	}
+	
+	
+	public void sortStrings(String[ ] words){
+		
+		
+		
+		
+		
+		String FILENAME = "src/atdd/challenge_sorted.csv";
+		BufferedWriter bwriter = null;
+		FileWriter fwriter = null;
+
+		try {
+			
+			fwriter = new FileWriter(FILENAME);
+			bwriter = new BufferedWriter(fwriter);
+			bwriter.write("Words,Unique,Weight\n");
+			for (int i = 0; i < words.length; i++) {
+				if (null != words[i]) {
+					String str = words[i] + "," + (hasUniqueChars(words[i]) ? "TRUE" : "FALSE") + "," + getWeight(words[i]) + "\n";
+					System.out.print(str);
+					bwriter.write(str);
+				}
+			}
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+
+		} finally {
+
+			try {
+
+				if (bwriter != null)
+					bwriter.close();
+
+				if (fwriter != null)
+					fwriter.close();
+
+			} catch (IOException ex) {
+
+				ex.printStackTrace();
+
+			}
+
+		}
+
+	}
+	}
+

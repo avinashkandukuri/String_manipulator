@@ -1,0 +1,205 @@
+package challenge;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+
+/**
+* This class StringManipulator reads data from Challenge_tests.CSV files      
+*  and writes the manipulated strings (Sort, hasUniqueChars, Clean) to Challenge_sorted.CSV 
+* 
+*/
+public class StringManipulator {
+
+		public static  void main(String[] args) {
+
+		StringManipulator stringManipulator = new StringManipulator();
+      
+		String csvFile = "src/atdd/challenge_tests.csv";
+        BufferedReader reader = null;
+        String line = "";
+        String word = "";
+        
+        //list to store the words of file
+        List<String> data = new ArrayList<String>();
+        
+        try {
+
+            reader = new BufferedReader(new FileReader(csvFile));
+            
+            //this skips the first header line  
+            reader.readLine();
+            
+            while ((line = reader.readLine()) != null) {
+               if(!line.trim().isEmpty())
+            	    word = line;
+                    data.add(line);
+                    System.out.println("Has Unique Character in the String:" + stringManipulator.hasUniqueChars(word));
+            }
+	
+        } catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			// Close buffer reader
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		// Sort words if list is not empty
+		if (!data.isEmpty()) {
+			String[] arr = new String[data.size()];
+			stringManipulator.sortStrings(data.toArray(arr));
+		}
+	}
+	
+	/**
+	 * Removes all non-alphabetic characters from a string and converts all
+	 * characters to upper case.
+	 * 
+	 * @param str
+	 *            - String to clean
+	 * @return Cleaned string in upper case.
+	 * 
+	 * */
+	public String cleanString(String str) {
+		
+		if(str == null || str.isEmpty())
+			return str;
+			
+			//This REGEX replaces all non alphabetic char to "" and converts string to UpperCase
+			str = str.replaceAll("[^a-zA-Z]", "");
+			str = str.toUpperCase();
+		
+		return str;
+	}
+	
+	
+	/**
+	 * this functions checks the string has unique character or not.
+	 * if not then return false else true.
+	 * 
+	 * @param word
+	 *           
+	 * @return Boolean value which indicates string has unique character or not 
+	 */
+	public boolean hasUniqueChars(String word) {
+		
+		if (null == word || word.trim().isEmpty())
+			return false;
+		
+		word =  cleanString(word);
+		
+		//this for loop compares the values against each char in the string 
+		//if there is a matching char then it returns false.
+		for (int i = 0; i < word.length(); i++) 
+            for (int j = i + 1; j < word.length(); j++) 
+                if (word.charAt(i) == word.charAt(j)) 
+                    return false; 
+  
+        // If no duplicate characters encountered, 
+        // return true 
+        return true; 
+	}
+	
+	
+	/**
+	 * Get the average weight of passed string. Weight is numeric value that is the
+	 * average of each char ASCII value contained in the string.
+	 * 
+	 * @param word
+	 *           
+	 * @return Average weight of the string and the value is returns in Double DataType
+	 */
+	public double getWeight(String word) {
+		
+		if (null == word || word.trim().isEmpty())
+			return 0;
+		double weight = 0;
+		word = cleanString(word);
+		for (char c : word.toCharArray()) {
+			weight += (int) c;
+		}
+		
+		return weight / word.length();
+		
+	}
+	
+	
+	
+	/**
+	 * This function Sort the Strings as per weight if array is not null and size of array is empty
+	 * and it also writes the sorted and Cleaned strings to the file. 
+	 * 
+	 * @param words
+	 *            
+	 */
+	public void sortStrings(String[ ] words){
+		
+		int n = words.length;
+			String temp = null;
+		
+			//this loop compares the weight of a string
+		        for (int i = 0; i < n-1; i++) 
+		            for (int j = 0; j < n-i-1; j++) 
+		                if (getWeight(words[j]) > getWeight(words[j+1])) 
+		                { 
+		                    // swap temp and words[i] 
+		                     temp = words[j]; 
+		                     words[j] = words[j+1]; 
+		                     words[j+1] = temp; 
+		                } 
+			    
+			    
+		//src/atdd/challenge_sorted.csv
+		String FILENAME = "src/atdd/challenge_sorted.csv";
+		BufferedWriter bwriter = null;
+		FileWriter fwriter = null;
+
+		try {
+			
+			fwriter = new FileWriter(FILENAME);
+			bwriter = new BufferedWriter(fwriter);
+			bwriter.write("Words,Unique,Weight\n");
+			for (int i = 0; i < words.length; i++) {
+				if (null != words[i]) {
+					String str = words[i] + "," + (hasUniqueChars(words[i]) ? "TRUE" : "FALSE") + "," + getWeight(words[i]) + "\n";
+					System.out.print(str);
+					bwriter.write(str);
+				}
+			}
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+
+		} finally {
+
+			try {
+
+				if (bwriter != null)
+					bwriter.close();
+
+				if (fwriter != null)
+					fwriter.close();
+
+			} catch (IOException ex) {
+
+				ex.printStackTrace();
+
+			}
+
+		}
+
+	}
+	}
+

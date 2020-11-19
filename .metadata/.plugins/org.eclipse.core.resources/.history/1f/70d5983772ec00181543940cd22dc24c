@@ -1,0 +1,110 @@
+package challenge;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+
+/**
+* This class StringManipulator reads data from Challenge_tests.CSV files      
+*  and writes the manipulated strings (Sort, hasUniqueChars, Clean) to Challenge_sorted.CSV 
+* 
+*/
+public class StringManipulator {
+
+		public static  void main(String[] args) {
+
+		StringManipulator stringManipulator = new StringManipulator();
+      
+		String csvFile = "src/dataSource/challenge_tests.csv";
+        BufferedReader reader = null;
+        String line = "";
+        
+        //list to store the words of file
+        List<String> data = new ArrayList<String>();
+        
+        try {
+
+            reader = new BufferedReader(new FileReader(csvFile));
+            
+            //this skips the first header line  
+            reader.readLine();
+            
+            while ((line = reader.readLine()) != null) {
+               if(!line.trim().isEmpty())
+                    data.add(line);
+            }
+	
+        } catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			// Close buffer reader
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		// Sort words if list is not empty
+		if (!words.isEmpty()) {
+			String[] arr = new String[words.size()];
+			stringManipulator.sortStrings(words.toArray(arr));
+		}
+	}
+	
+	/**
+	 * Removes all non-alphabetic characters from a string and converts all
+	 * characters to upper case.
+	 * 
+	 * @param str
+	 *            - String to clean
+	 * @return Cleaned string in upper case.
+	 * 
+	 * */
+	public String cleanString(String str) {
+		
+			
+			//This REGEX replaces all non alphabetic char to "" and converts string to UpperCase
+			str = str.replaceAll("[^a-zA-Z]", "");
+			str = str.toUpperCase();
+		
+		return str;
+	}
+	
+	
+	public boolean hasUniqueChars(String word) {
+		
+		if (null == word || word.trim().isEmpty())
+			return false;
+		
+		String Cleaned =  cleanString(word);
+		
+		for (int i = 0; i < Cleaned.length(); i++) 
+            for (int j = i + 1; j < Cleaned.length(); j++) 
+                if (Cleaned.charAt(i) == Cleaned.charAt(j)) 
+                    return false; 
+  
+        // If no duplicate characters encountered, 
+        // return true 
+        return true; 
+	}
+	
+	
+	public void getWeight(String word) {
+		
+	}
+	
+	
+	public void sortStrings(String[ ] words){
+		
+	}
+	
+	
+}

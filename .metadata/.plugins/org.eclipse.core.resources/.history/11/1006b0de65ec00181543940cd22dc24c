@@ -1,0 +1,59 @@
+package challenge;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+
+public class StringManipulator {
+
+	
+	public static void main(String[] args) {
+
+		StringManipulator stringManipulator = new StringManipulator();
+
+		/**
+		 * Process the challenge_tests.csv file
+		 */
+		BufferedReader br = null;
+		String line = "";
+		// List to store words
+		List<String> words = new LinkedList<String>();
+		try {
+			br = new BufferedReader(new FileReader("src/atdd/challenge_tests.csv"));
+
+			// Skip header
+			br.readLine();
+
+			// Read lines from the file
+			while ((line = br.readLine()) != null) {
+				if (!line.trim().isEmpty()) {
+					String word = line;
+					words.add(word);
+					System.out.println("Has Unique Character:" + stringManipulator.hasUniqueChars(word));
+				}
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			// Close buffer reader
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		// Sort words if list is not empty
+		if (!words.isEmpty()) {
+			String[] arr = new String[words.size()];
+			stringManipulator.sortStrings(words.toArray(arr));
+		}
+	}
+	
+	
+}
